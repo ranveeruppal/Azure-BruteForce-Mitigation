@@ -78,7 +78,11 @@ This Azure brute force mitigation project aimed to establish a functional virtua
 
 15. Before conducting the brute-force attacks, I created a new IPS (Intrusion Prevention System) policy to block these attacks and monitor them. The IPS signature offered by Fortinet for preventing brute-force attacks was not sensitive enough, so I created a custom signature. A brute-force attack would be detected if 5 wrong attempts were made within 20 seconds.
 
+<img width="883" alt="Screenshot 2024-09-17 at 6 17 05 PM" src="https://github.com/user-attachments/assets/0470d4dc-6654-48f7-a5b0-65e453741421">
+
 16. Testing confirmed that my IP was blocked after 5 failed attempts within 20 seconds.
+
+![Uploading Screenshot 2024-09-17 at 6.17.24 PM.png…]()
 
 The next stage of this project was to utilize Microsoft Sentinel to ingest the logs from Fortinet to create an alerting system and perform incident response. However, to send logs into Microsoft Sentinel, I had to configure a Log Analytics workspace along with Azure Monitor. Since Azure cannot directly ingest logs from the Fortinet firewall, the logs must first pass through syslogs on the Linux VM, which are then sent to the workspace in Azure.
 
@@ -86,11 +90,18 @@ The next stage of this project was to utilize Microsoft Sentinel to ingest the l
 
 18. I verified that the logs were being received on the Linux VM by checking the `/var/log` directory, and the logs were successfully forwarded.
 
+<img width="1384" alt="Screenshot 2024-09-17 at 6 18 29 PM" src="https://github.com/user-attachments/assets/dfcc2601-96b6-4bce-ba89-0c97757f4a07">
+
 19. On the Sentinel page in Azure, I verified that the logs were being ingested into Sentinel via the CEF (Common Event Format) connector.
+
+<img width="952" alt="Screenshot 2024-09-17 at 6 18 58 PM" src="https://github.com/user-attachments/assets/828d04d1-4fd1-4070-a580-4889f091db9b">
 
 20. Finally, I created a Sentinel query rule based on the IPS rule created earlier to block brute-force RDP attempts on the Windows machine. This query creates an alert anytime the IPS from the firewall is triggered. The alert is configured to map to the source IP that triggered the brute-force attack.
 
+<img width="991" alt="Screenshot 2024-09-17 at 6 19 13 PM" src="https://github.com/user-attachments/assets/ac440e49-6c63-4f2f-9c55-5dead2b7e65c">
+
 21. Checking the incidents in Sentinel, I confirmed that a new ticket had been created based on the IPS being triggered by the brute-force attack. This ticket can now be used to conduct incident response. The source IP has also been included in the ticket.
+<img width="502" alt="Screenshot 2024-09-17 at 6 19 55 PM" src="https://github.com/user-attachments/assets/2361b7c1-e305-4b2e-b5a8-a931f4fc350f">
 
 ---
 
