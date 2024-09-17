@@ -40,25 +40,41 @@ This Azure brute force mitigation project aimed to establish a functional virtua
 
 <img width="984" alt="Screenshot 2024-09-17 at 6 03 46 PM" src="https://github.com/user-attachments/assets/28cf4edb-139e-44d9-8768-5fea498b4c24">
 
-5. As displayed in the diagram, we have two interfaces: port 1 and port 2. To configure these for this lab, I disabled HTTPS on port 1 (connected to the internet) and disabled SSH on the DMZ port (port 2).
+5. As displayed in the network topology, the firewall has two interfaces: port 1 and port 2. To configure these for this lab, I disabled HTTPS on port 1 (connected to the internet) and disabled SSH on the DMZ port (port 2).
 
 6. The static routing is described in the screenshot below. All traffic from the internet will go through the Azure gateway in the `LAB_WAN` subnet, which will then (through the firewall) be routed through the `LAB_DMZ` gateway to reach our virtual machines.
 
+<img width="1266" alt="Screenshot 2024-09-17 at 6 06 19 PM" src="https://github.com/user-attachments/assets/49abddd6-9ef1-49ea-840c-71b9591d13cc">
+
 7. I then added a Windows virtual machine to the resource group. Because I only want to expose this virtual machine to the internet through the firewall (as opposed to the Azure network), I blocked public inbound ports. The settings and configurations for the virtual machine are also attached.
+
+<img width="765" alt="Screenshot 2024-09-17 at 6 07 51 PM" src="https://github.com/user-attachments/assets/03364982-4667-4196-8ad4-1cdc9e14e0ef">
 
 8. I set up a second Linux virtual machine with the following configurations.
 
+<img width="380" alt="Screenshot 2024-09-17 at 6 08 31 PM" src="https://github.com/user-attachments/assets/6f46b3c7-403c-4dd0-b83f-0d30b8ced33e">
+
 9. Now that all the subnets, firewalls, and virtual machines have been deployed into my resource group, I had to make sure that the flow of the traffic was configured correctly, where all traffic flows through the Fortinet firewall. This was done through route tables.
 
-10. I first created a route table called `DMZ-route-table` for the DMZ subnet. This table routes all traffic from the DMZ subnet destined for the internet through the firewall (IP address: `10.10.200.4`) in a route called `to-internet`. This route table was associated with the DMZ subnet.
+10. I first created a route called `To-Internet` for the DMZ subnet. This table routes all traffic from the DMZ subnet destined for the internet through the firewall (IP address: `10.10.200.4`) in a route called `to-internet`. In other words, all outbound traffic will have the next hop set as the DMZ port of the firewall (port 2).
 
-11. A second route table (`WAN-route-table`) was created to route traffic coming from the internet destined for our virtual machines through the Fortinet firewall and then through the DMZ.
+<img width="918" alt="Screenshot 2024-09-17 at 6 09 11 PM" src="https://github.com/user-attachments/assets/83c9e4d2-247a-4b79-b61f-4e46ef40437e">
 
-12. I then tested the connection between the Windows machine and the Fortinet firewall and between the Windows machine and the internet to ensure the pings were going through. However, for this to be possible, I had to allow internet-bound traffic to pass through the firewall by creating a new policy. This policy allows incoming traffic through the DMZ port and outgoing traffic through the WAN port. For testing purposes, I allowed all sources and all destinations, which wouldn't normally be the case in a production environment.
+11. A second route (`to-DMZ`) was created to route traffic coming from the internet destined for our virtual machines through the Fortinet firewall and then through the DMZ.
+
+<img width="457" alt="Screenshot 2024-09-17 at 6 11 48 PM" src="https://github.com/user-attachments/assets/cbed0eb4-116f-430e-8cac-d1d9c28c01e1">
+
+12. I then tested the connection between the Windows machine and the Fortinet firewall and between the Windows machine and the internet to ensure pings were going through. However, for this to be possible, I had to allow internet-bound traffic to pass through the firewall by creating a new policy. This policy allows incoming traffic through the DMZ port and outgoing traffic through the WAN port. For testing purposes, I allowed all sources and all destinations, which wouldn't normally be the case in a production environment.
+
+<img width="509" alt="Screenshot 2024-09-17 at 6 12 47 PM" src="https://github.com/user-attachments/assets/534c439f-7bf1-431b-803e-d6f2184922cd">
 
 13. Since the incoming traffic also needs to be checked to see if it can reach the Windows virtual machine, I had to configure a virtual IP where the external IP of the firewall is mapped to the local IP of the Windows machine. I tested the incoming connection by using RDP on port 3389, which is why I also enabled port forwarding so traffic on the WAN subnet on port 3389 would be mapped to port 3389 on the Windows machine.
 
-14. After disabling the Windows firewall on the virtual machine, I was able to successfully connect to the Azure Windows machine through an RDP connection from my local Windows 11 machine.
+<img width="639" alt="Screenshot 2024-09-17 at 6 14 08 PM" src="https://github.com/user-attachments/assets/8712b9cb-7650-494d-b264-913eaeaa3d88">
+
+14. After disabling the Windows firewall (Not our NGFW) on the virtual machine, I was able to successfully connect to the Azure Windows machine through an RDP connection from my local Windows 11 machine.
+
+<img width="985" alt="Screenshot 2024-09-17 at 6 15 19 PM" src="https://github.com/user-attachments/assets/f28be326-a1ff-417b-84c3-cd657425e911">
 
 15. Before conducting the brute-force attacks, I created a new IPS (Intrusion Prevention System) policy to block these attacks and monitor them. The IPS signature offered by Fortinet for preventing brute-force attacks was not sensitive enough, so I created a custom signature. A brute-force attack would be detected if 5 wrong attempts were made within 20 seconds.
 
