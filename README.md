@@ -21,6 +21,12 @@ This Azure brute force mitigation project aimed to establish a functional virtua
 
 ---
 
+## Network Topology
+
+<img width="956" alt="Screenshot 2024-09-17 at 6 21 58 PM" src="https://github.com/user-attachments/assets/c7c88ae3-1f4c-4c92-9ebf-525a855eb863">
+
+---
+
 ## Steps
 
 1. First, I created a new resource group called `SOC_lab` to contain all the resources required for this project.
