@@ -88,7 +88,7 @@ This Azure brute force mitigation project aimed to establish a functional virtua
 
 16. Testing confirmed that my IP was blocked after 5 failed attempts within 20 seconds.
 
-![Uploading Screenshot 2024-09-17 at 6.17.24 PM.png…]()
+<img width="1006" alt="Screenshot 2024-09-17 at 10 42 42 PM" src="https://github.com/user-attachments/assets/3e138757-b699-4a06-b891-ddc6b109ebc0">
 
 The next stage of this project was to utilize Microsoft Sentinel to ingest the logs from Fortinet to create an alerting system and perform incident response. However, to send logs into Microsoft Sentinel, I had to configure a Log Analytics workspace along with Azure Monitor. Since Azure cannot directly ingest logs from the Fortinet firewall, the logs must first pass through syslogs on the Linux VM, which are then sent to the workspace in Azure.
 
