@@ -29,12 +29,16 @@ This Azure brute force mitigation project aimed to establish a functional virtua
 
 2. I then created a VNet with the following security settings, along with three different subnets: one for the Bastion service, the WAN, and the DMZ, respectively.
 
+<img width="610" alt="Screenshot 2024-09-17 at 6 01 50 PM" src="https://github.com/user-attachments/assets/9ab92bc0-ff65-4998-914e-8500efd7ebe4">
+
 3. I then installed the FortiGate Next-Generation Firewall, the configuration was as follows:
-    - The external subnet (connected to the internet) is going to be the `LAB_WAN` subnet created in step two.
-    - The internal subnet will be the `LAB_DMZ`. The subnet IPs are `10.10.0.0/24` and `10.10.200.0/24` respectively.
+    - The external subnet (connected to the internet) is going to be the `LAB_WAN` subnet created in step two. The internal subnet will be the `LAB_DMZ`. The subnet IPs are `10.10.0.0/24` and 
+      `10.10.200.0/24` respectively.
     - The public IP assigned to the Fortinet firewall by Azure will be translated to its IP within the external subnet `10.10.0.4/24`.
 
 4. The Fortinet Next-Generation Firewall was successfully deployed and can be accessed through its public IP address.
+
+<img width="984" alt="Screenshot 2024-09-17 at 6 03 46 PM" src="https://github.com/user-attachments/assets/28cf4edb-139e-44d9-8768-5fea498b4c24">
 
 5. As displayed in the diagram, we have two interfaces: port 1 and port 2. To configure these for this lab, I disabled HTTPS on port 1 (connected to the internet) and disabled SSH on the DMZ port (port 2).
 
