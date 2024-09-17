@@ -23,7 +23,7 @@ This Azure brute force mitigation project aimed to establish a functional virtua
 
 ## Network Topology
 
-![Network Topology](https://i.imgur.com/your-image-id.png)
+<img src="https://imgur.com/a/IESjCCZ" width="300">
 
 ---
 
