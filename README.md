@@ -31,7 +31,7 @@ This Azure brute force mitigation project aimed to establish a functional virtua
 
 1. First, I created a new resource group called `SOC_lab` to contain all the resources required for this project.
 
-<img width="476" alt="Screenshot 2024-09-17 at 6 00 44 PM" src="https://github.com/user-attachments/assets/ec601d8a-1b45-4d51-953b-4ae77f16729b">
+<img src="https://imgur.com/f8DaaCU.png">
 
 2. I then created a VNet with the following security settings, along with three different subnets: one for the Bastion service, the WAN, and the DMZ, respectively.
 
